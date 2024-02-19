@@ -13,16 +13,14 @@
 #define TAB '\t'
 
 int debugMode = TRUE; /*Poner en true para debug*/
-
-char b[1];
+/*Uso 0x7F como nulo*/
+char b[1] = {0x7F};
 int fd;
 int ret;
 int bytesRead = -1;
-int byteCounter = 0;
+int byteCounter = -1;
 int lineCounter = 0;
-int wordCounter = 0;
-char lastType = NULL; 
-char debugPrint[3];
+int wordCounter = 1;
 
 int main(int argc, char *argv[]){
 	/*If less than two arguments (argv[0] -> program, argv[1] -> file to process) print an error y return -1*/
@@ -36,37 +34,32 @@ int main(int argc, char *argv[]){
 		printf("Open error");
 		return -1;
 	}
-	while(TRUE){
+	while(bytesRead){
 		bytesRead = read(fd, b, 1);
 		if(bytesRead == -1){
 			printf("Read error");
 			return -1;
 		}
-		else if (bytesRead == 0){
-			break;
-		}
 		byteCounter++;
-		if (b[0] != SPACE && b[0] != TAB && b[0] != NEW_LINE){
-			if (lastType == SPACE || lastType == TAB || lastType == NULL){
-				wordCounter++;
-			}
-			else if (lastType == NEW_LINE){
-				lineCounter++;
-				wordCounter++;
-			}
-			lastType = 'N';
-		}
-		else{
-			lastType = b[0];
-		}
-		/*Debug*/
-		if (debugMode == TRUE){
-			printf("b: %-3d %c l: %-3d w: %-3d t: %-3d\n", byteCounter, b[0], lineCounter, wordCounter, lastType);
-		}
-		/*Debug*/
+        switch (b[0]){
+		    case SPACE:
+                wordCounter++;
+                break;
+            case TAB:
+                wordCounter++;
+                break;
+            case NEW_LINE:
+                lineCounter++;
+                wordCounter++;
+                break;
+            case 0x7F:
+                wordCounter = 0;
+                lineCounter = 0;
+                byteCounter = 0;
+                break;
+        }		
 	}
-	printf("\n\n");
-	printf("%i %i %i\n", lineCounter, wordCounter ,byteCounter);
+	printf("%i %i %i %s\n", lineCounter, wordCounter ,byteCounter, argv[1]);
 	int ret = close(fd);
 	return ret;
 }
