@@ -21,25 +21,37 @@ int lineCounter = 0;
 int wordCounter = 0;
 char lastType = '\0'; 
 
-void stringCopy(char str[], char copy[], int size){
+int stringCopy(char str[], char copy[], int size){
+	if (copy[size-1] != '\0'){
+		return -1;
+	}
 	for(int i=0;i<size;i++){
 		str[i] = copy[i];
 	}
-	return;
+	return 0;
 }
 
-void debugPrint(int debug){
-	if (debug == TRUE){
+int debugPrint(int debug){
+	if (debug == FALSE){
+		return -1;
+	}
+	else{
 		char debugPrint[4];
 		switch(b[0]){
 			case SPACE:
-				stringCopy(debugPrint, "SPC", sizeof(debugPrint));
+				if (stringCopy(debugPrint, "SPC", sizeof(debugPrint)) != 0){
+					return -2;
+				}
 				break;
 			case TAB:
-				stringCopy(debugPrint, "TAB", sizeof(debugPrint));
+				if (stringCopy(debugPrint, "TAB", sizeof(debugPrint)) != 0){
+					return -2;
+				}
 				break;
 			case NEW_LINE:
-				stringCopy(debugPrint, "NEW", sizeof(debugPrint));
+				if (stringCopy(debugPrint, "NEW", sizeof(debugPrint)) != 0){
+					return -2;
+				}
 				break;
 			default:
 				stringCopy(debugPrint, (char[4]){b[0], ' ', ' ', '\0'}, sizeof(debugPrint));
@@ -47,6 +59,7 @@ void debugPrint(int debug){
 		}
 		printf("b: %-3d %s l: %-3d w: %-3d\n", byteCounter, debugPrint, lineCounter, wordCounter);
 		}
+		return 0;
 }
 
 int main(int argc, char *argv[]){
