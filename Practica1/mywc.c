@@ -94,7 +94,10 @@ int main(int argc, char *argv[]){
 			}
 			lastType = 'N';
 		}
-		else{
+		else if (b[0] == SPACE && lastType == NEW_LINE){
+			lastType = NEW_LINE;
+		}
+		else {
 			lastType = b[0];
 		}
 		/*Debug*/
