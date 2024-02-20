@@ -12,8 +12,6 @@
 #define SPACE ' '
 #define TAB '\t'
 
-int debugMode = TRUE; /*Poner en true para debug*/
-
 char b[1];
 int fd;
 int ret;
@@ -21,8 +19,35 @@ int bytesRead = -1;
 int byteCounter = 0;
 int lineCounter = 0;
 int wordCounter = 0;
-char lastType = NULL; 
-char debugPrint[3];
+char lastType = '\0'; 
+
+void stringCopy(char str[], char copy[], int size){
+	for(int i=0;i<size;i++){
+		str[i] = copy[i];
+	}
+	return;
+}
+
+void debugPrint(int debug){
+	if (debug == TRUE){
+		char debugPrint[4];
+		switch(b[0]){
+			case SPACE:
+				stringCopy(debugPrint, "SPC", sizeof(debugPrint));
+				break;
+			case TAB:
+				stringCopy(debugPrint, "TAB", sizeof(debugPrint));
+				break;
+			case NEW_LINE:
+				stringCopy(debugPrint, "NEW", sizeof(debugPrint));
+				break;
+			default:
+				stringCopy(debugPrint, (char[4]){b[0], ' ', ' ', '\0'}, sizeof(debugPrint));
+				break;
+		}
+		printf("b: %-3d %s l: %-3d w: %-3d\n", byteCounter, debugPrint, lineCounter, wordCounter);
+		}
+}
 
 int main(int argc, char *argv[]){
 	/*If less than two arguments (argv[0] -> program, argv[1] -> file to process) print an error y return -1*/
@@ -47,7 +72,7 @@ int main(int argc, char *argv[]){
 		}
 		byteCounter++;
 		if (b[0] != SPACE && b[0] != TAB && b[0] != NEW_LINE){
-			if (lastType == SPACE || lastType == TAB || lastType == NULL){
+			if (lastType == SPACE || lastType == TAB || lastType == '\0'){
 				wordCounter++;
 			}
 			else if (lastType == NEW_LINE){
@@ -60,10 +85,7 @@ int main(int argc, char *argv[]){
 			lastType = b[0];
 		}
 		/*Debug*/
-		if (debugMode == TRUE){
-			printf("b: %-3d %c l: %-3d w: %-3d t: %-3d\n", byteCounter, b[0], lineCounter, wordCounter, lastType);
-		}
-		/*Debug*/
+		debugPrint(TRUE);
 	}
 	printf("\n\n");
 	printf("%i %i %i\n", lineCounter, wordCounter ,byteCounter);
