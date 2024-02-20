@@ -13,8 +13,8 @@
 #define TAB '\t'
 
 int debugMode = TRUE; /*Poner en true para debug*/
-/*Uso 0x7F como nulo*/
-char b[1] = {0x7F};
+
+char b[1];
 int fd;
 int ret;
 int bytesRead = -1;
@@ -52,7 +52,7 @@ int main(int argc, char *argv[]){
                 lineCounter++;
                 wordCounter++;
                 break;
-            case 0x7F:
+            case '\0':
                 wordCounter = 0;
                 lineCounter = 0;
                 byteCounter = 0;
