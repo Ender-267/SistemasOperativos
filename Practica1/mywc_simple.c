@@ -12,8 +12,6 @@
 #define SPACE ' '
 #define TAB '\t'
 
-int debugMode = TRUE; /*Poner en true para debug*/
-
 char b[1];
 int fd;
 int ret;
