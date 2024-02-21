@@ -18,7 +18,7 @@ int ret;
 int bytesRead = -1;
 int byteCounter = 0;
 int lineCounter = 0;
-int wordCounter = 0;
+int wordCounter = 1;
 char lastType = '\0'; 
 
 int stringCopy(char str[], char copy[], int size){
@@ -37,6 +37,7 @@ int debugPrint(int debug){
 	}
 	else{
 		char debugPrint[4];
+		char debugPrintType[4];
 		switch(b[0]){
 			case SPACE:
 				if (stringCopy(debugPrint, "SPC", sizeof(debugPrint)) != 0){
@@ -57,7 +58,27 @@ int debugPrint(int debug){
 				stringCopy(debugPrint, (char[4]){b[0], ' ', ' ', '\0'}, sizeof(debugPrint));
 				break;
 		}
-		printf("b: %-3d %s l: %-3d w: %-3d\n", byteCounter, debugPrint, lineCounter, wordCounter);
+		switch(lastType){
+			case SPACE:
+				if (stringCopy(debugPrintType, "SPC", sizeof(debugPrintType)) != 0){
+					return -2;
+				}
+				break;
+			case TAB:
+				if (stringCopy(debugPrintType, "TAB", sizeof(debugPrintType)) != 0){
+					return -2;
+				}
+				break;
+			case NEW_LINE:
+				if (stringCopy(debugPrintType, "NEW", sizeof(debugPrintType)) != 0){
+					return -2;
+				}
+				break;
+			default:
+				stringCopy(debugPrintType, (char[4]){b[0], ' ', ' ', '\0'}, sizeof(debugPrintType));
+				break;
+		}
+		printf("b: %-3d %s l: %-3d w: %-3d t:%s\n", byteCounter, debugPrint, lineCounter, wordCounter ,debugPrintType);
 		}
 		return 0;
 }
@@ -84,24 +105,35 @@ int main(int argc, char *argv[]){
 			break;
 		}
 		byteCounter++;
+
 		if (b[0] != SPACE && b[0] != TAB && b[0] != NEW_LINE){
-			if (lastType == SPACE || lastType == TAB || lastType == '\0'){
-				wordCounter++;
+			switch (lastType){
+				case NEW_LINE:
+					lineCounter++;
+					wordCounter++;
+					break;
+				case TAB:
+					wordCounter++;
+				case SPACE:
+					wordCounter++;
 			}
-			else if (lastType == NEW_LINE){
-				lineCounter++;
-				wordCounter++;
-			}
-			lastType = 'N';
-		}
-		else if (b[0] == SPACE && lastType == NEW_LINE){
-			lastType = NEW_LINE;
-		}
-		else {
 			lastType = b[0];
 		}
+		else if (lastType == NEW_LINE){
+			if (b[0] != SPACE && b[0] != TAB){
+				lineCounter++;
+			}
+		}
+		else{
+			lastType = b[0];
+		}
+		
 		/*Debug*/
 		debugPrint(TRUE);
+	}
+	if (b[0] == '\0'){
+		wordCounter = 0;
+		lineCounter = 0;
 	}
 	printf("\n\n");
 	printf("%i %i %i\n", lineCounter, wordCounter ,byteCounter);
