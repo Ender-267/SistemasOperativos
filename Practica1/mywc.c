@@ -134,6 +134,8 @@ int main(int argc, char *argv[]){
 	if (b[0] == '\0'){
 		wordCounter = 0;
 		lineCounter = 0;
+	} else if (b[0] == NEW_LINE){
+		lineCounter++;
 	}
 	printf("\n\n");
 	printf("%i %i %i\n", lineCounter, wordCounter ,byteCounter);
