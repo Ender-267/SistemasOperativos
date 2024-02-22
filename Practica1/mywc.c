@@ -13,8 +13,6 @@
 #define TAB '\t'
 
 char b[1];
-int fd;
-int ret;
 int bytesLeidos = -1;
 int contadorBytes = 0;
 int contadorLineas = 0;
