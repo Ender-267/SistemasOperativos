@@ -15,10 +15,10 @@
 char b[1];
 int fd;
 int ret;
-int bytesRead = -1;
-int byteCounter = -1;
-int lineCounter = 0;
-int wordCounter = 1;
+int bytesLeidos = -1;
+int contadorBytes = -1;
+int contadorLineas = 0;
+int contadorPalabras = 1;
 
 int main(int argc, char *argv[]){
 	/*If less than two arguments (argv[0] -> program, argv[1] -> file to process) print an error y return -1*/
@@ -32,32 +32,32 @@ int main(int argc, char *argv[]){
 		printf("Open error");
 		return -1;
 	}
-	while(bytesRead){
-		bytesRead = read(fd, b, 1);
-		if(bytesRead == -1){
+	while(bytesLeidos){
+		bytesLeidos = read(fd, b, 1);
+		if(bytesLeidos == -1){
 			printf("Read error");
 			return -1;
 		}
-		byteCounter++;
+		contadorBytes++;
         switch (b[0]){
-		    case SPACE:
-                wordCounter++;
+		    case ESPACIO:
+                contadorPalabras++;
                 break;
             case TAB:
-                wordCounter++;
+                contadorPalabras++;
                 break;
-            case NEW_LINE:
-                lineCounter++;
-                wordCounter++;
+            case SALTO_LINEA:
+                contadorLineas++;
+                contadorPalabras++;
                 break;
             case '\0':
-                wordCounter = 0;
-                lineCounter = 0;
-                byteCounter = 0;
+                contadorPalabras = 0;
+                contadorLineas = 0;
+                contadorBytes = 0;
                 break;
         }		
 	}
-	printf("%i %i %i %s\n", lineCounter, wordCounter ,byteCounter, argv[1]);
+	printf("%i %i %i %s\n", contadorLineas, contadorPalabras ,contadorBytes, argv[1]);
 	int ret = close(fd);
 	return ret;
 }
