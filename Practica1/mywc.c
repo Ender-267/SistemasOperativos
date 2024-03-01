@@ -112,6 +112,7 @@ int main(int argc, char *argv[]){
 					break;
 				case TAB:
 					contadorPalabras++;
+					break;
 				case ESPACIO:
 					contadorPalabras++;
 					break;
