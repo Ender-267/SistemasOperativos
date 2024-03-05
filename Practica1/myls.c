@@ -11,14 +11,17 @@
 #define FALSE 0
 
 char path_actual[PATH_MAX];
-struct dirent lectura_actual;
+struct dirent *lectura_actual;
 
 int main(int argc, char *argv[]){
 	if (argc > 1) {
         strcpy(path_actual, argv[1]);
     } else {
-        strcpy(path_actual, ".\\");
-    }
+        if (getcwd(path_actual, PATH_MAX) == NULL){
+			perror("Error de getcwd()");
+			return -1;
+		}
+	}
 
 	DIR *dir = opendir(path_actual);
 
@@ -27,13 +30,13 @@ int main(int argc, char *argv[]){
 		return -1;
 	}
 
-	while(TRUE)
-	{
+	while(TRUE){
 		lectura_actual = readdir(dir);
 
-        if (*lectura_actual == NULL) {
+        if (lectura_actual == NULL) {
             break;
         };
+		printf("%s\n", lectura_actual->d_name);
 	};
 	closedir(dir);
 	return 0;
