@@ -15,14 +15,16 @@ struct dirent *lectura_actual;
 
 int main(int argc, char *argv[]){
 	if (argc > 1) {
+		/*Guardamos el path en una variable*/
         strcpy(path_actual, argv[1]);
     } else {
+		/*Si no definimos un path en los parametros del programa, getcwd() recoge el path*/
         if (getcwd(path_actual, PATH_MAX) == NULL){
 			perror("Error de getcwd()");
 			return -1;
 		}
 	}
-
+	/*Abrimos el directorio definido por el path*/
 	DIR *dir = opendir(path_actual);
 
 	if (dir == NULL){
@@ -31,14 +33,16 @@ int main(int argc, char *argv[]){
 	}
 
 	while(TRUE){
+		/*Leemos los subdirectorios*/
 		lectura_actual = readdir(dir);
 
         if (lectura_actual == NULL) {
             break;
         };
+		/*Imprimimos el nombre de los subdirectorios con cada iteracion del bucle*/
 		printf("%s\n", lectura_actual->d_name);
 	};
-	closedir(dir);
-	return 0;
+	int ret = closedir(dir);
+	return ret;
 }
 

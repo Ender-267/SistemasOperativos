@@ -26,23 +26,27 @@ int main(int argc, char *argv[]){
 		printf("Argumentos insuficientes\n");
 		return -1;
 	}
+	/*Abrimos archivo con open()*/
 	int fd = open(argv[1], O_RDONLY);
 	if (fd == -1){
 		printf("Error de open()");
 		return -1;
 	}
 	while(TRUE){
+		/*Leer siguiente byte*/
 		bytesLeidos = read(fd, b, 1);
 		if(bytesLeidos == -1){
 			printf("Error de read()");
 			return -1;
 		}
 		else if (bytesLeidos == 0){
+			/*Si terminamos de leer el archivo, salimos del bucle*/
 			break;
 		}
+		/*Incrementamos el contador de bytes*/
 		contadorBytes++;
-
 		if (b[0] != ESPACIO && b[0] != TAB && b[0] != SALTO_LINEA && b[0] != '\0'){
+			/*Si alcanzamos un caracter normal, miramos cual fue el caracter anterior y actualizamos los contadores*/
 			switch (tipoPrevio){
 				case SALTO_LINEA:
 					contadorLineas++;
@@ -58,9 +62,12 @@ int main(int argc, char *argv[]){
 					contadorPalabras++;
 					break;
 			}
+			/*Guardamos el valor leido para usarlo en la siguiente iteracion*/
 			tipoPrevio = b[0];
 		}
 		else if (tipoPrevio == SALTO_LINEA){
+			/*Si hay un salto de linea, no guardamos el valor
+			No nos importa si hay espacios/tabs despues de un salto*/
 			if (b[0] != ESPACIO && b[0] != TAB){
 				contadorLineas++;
 			}
@@ -70,10 +77,11 @@ int main(int argc, char *argv[]){
 		}
 	}
 	if (tipoPrevio == SALTO_LINEA){
+		/*En caso de que el archivo acabe en un salto de linea no se leera en el bucle, por lo que debemos
+		actualizarlo manualmente*/
 		contadorLineas++;
 	}
-	printf("\n\n");
-	printf("%i %i %i\n", contadorLineas, contadorPalabras ,contadorBytes);
+	printf("%d %d %d %s\n", contadorLineas, contadorPalabras ,contadorBytes, argv[1]);
 	int ret = close(fd);
 	return ret;
 }
