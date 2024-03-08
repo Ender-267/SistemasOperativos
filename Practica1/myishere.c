@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 {
 	/* If less than three arguments (argv[0] -> program, argv[1] -> directory to search, argv[2] -> file to find) print an error y return -1 */
 	if(argc < 3){
-		printf("Too few arguments\n");
+		printf("No hay suficientes argumentos\n");
 		return -1;
 	}
 	/*Abrimos el directorio*/

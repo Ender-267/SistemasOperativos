@@ -11,13 +11,13 @@
 #define FALSE 0
 
 char path_actual[PATH_MAX];
-struct dirent *lectura_actual;
+struct dirent* lectura_actual;
 
 int main(int argc, char *argv[]){
 	if (argc > 1) {
 		/*Guardamos el path en una variable*/
         strcpy(path_actual, argv[1]);
-    } else {
+    } else{
 		/*Si no definimos un path en los parametros del programa, getcwd() recoge el path*/
         if (getcwd(path_actual, PATH_MAX) == NULL){
 			perror("Error de getcwd()");
