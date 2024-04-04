@@ -18,7 +18,6 @@
 
 #define MAX_COMMANDS 8
 
-
 // files in case of redirection
 char filev[3][64];
 
@@ -193,6 +192,15 @@ int main(int argc, char* argv[])
     }
 		//************************************************************************************************
 
+        pid_t pid = fork();
+        if (pid < 0){
+            perror("Error de fork");
+            return -1;
+        } else if (pid != 0){
+            printf("TEST: %s  %s\n", **argvv, (*argvv + 1)[0]);
+            execv(**argvv, *argvv + 1);
+            perror("Error de execv");
+        }
 
 		/************************ STUDENTS CODE ********************************/
 	   if (command_counter > 0) {
